@@ -4,30 +4,29 @@ import AnimatedBackground from './AnimatedBackground.jsx';
 import './Vault.css';
 
 function Vault() {
-  // State for forms
   const [website, setWebsite] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  
-  // State for vault management
   const [masterPassword, setMasterPassword] = useState('');
   const [items, setItems] = useState([]);
   const [decryptedItems, setDecryptedItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isUnlocked, setIsUnlocked] = useState(false); // NEW: State to track if vault is unlocked
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/vault/items', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/vault/items`, {
           headers: { 'x-auth-token': token },
         });
         if (!response.ok) throw new Error('Failed to fetch vault items');
         const data = await response.json();
         setItems(data);
-      } catch (error) { console.error('Fetch items error:', error); }
+      } catch (error) {
+        console.error('Fetch items error:', error);
+      }
     };
     fetchItems();
   }, []);
@@ -51,7 +50,7 @@ function Vault() {
       const itemToEncrypt = { website, username, password };
       const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(itemToEncrypt), masterPassword).toString();
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL}api/vault/add`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/vault/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
         body: JSON.stringify({ encryptedData }),
@@ -59,7 +58,9 @@ function Vault() {
       if (!response.ok) throw new Error('Failed to add item to vault');
       alert('New encrypted item added to vault!');
       window.location.reload();
-    } catch (error) { alert(`Error adding item: ${error.message}`); }
+    } catch (error) {
+      alert(`Error adding item: ${error.message}`);
+    }
   };
 
   const handleDecrypt = () => {
@@ -79,8 +80,10 @@ function Vault() {
         return { id: item.id, ...decryptedData };
       });
       setDecryptedItems(decrypted);
-      setIsUnlocked(true); // Set vault to unlocked!
-    } catch (error) { alert('Decryption failed. Is the master password correct?'); }
+      setIsUnlocked(true);
+    } catch (error) {
+      alert('Decryption failed. Is the master password correct?');
+    }
   };
 
   const handleCopy = (passwordToCopy) => {
@@ -99,7 +102,9 @@ function Vault() {
       if (!response.ok) throw new Error('Failed to delete item');
       alert('Item deleted successfully.');
       window.location.reload();
-    } catch (error) { alert(`Error: ${error.message}`); }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
   };
 
   return (
@@ -107,7 +112,6 @@ function Vault() {
       <AnimatedBackground />
       <h2>Welcome to Your Secure Vault</h2>
 
-      {/* Show unlock form if vault is locked */}
       {!isUnlocked && items.length > 0 && (
         <div className="decrypt-section">
           <input 
@@ -120,7 +124,6 @@ function Vault() {
         </div>
       )}
       
-      {/* Show add form and items ONLY if vault is unlocked */}
       {isUnlocked && (
         <>
           <form onSubmit={handleAddItem}>
@@ -159,7 +162,6 @@ function Vault() {
         </>
       )}
 
-      {/* If the vault is empty, show the add form */}
       {items.length === 0 && (
         <form onSubmit={handleAddItem}>
             <h3>Add Your First Item</h3>
