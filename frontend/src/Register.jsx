@@ -21,12 +21,10 @@ function Register() {
       alert('Registration successful!');
       setEmail('');
       setMasterPassword('');
-    } catch (error) {
-      console.error('Registration failed:', error);
-      // alert(`Registration failed: ${error.message}`);
-      alert('Registration failed: ' + error.message);
-
-    }
+   } catch (error) {
+    console.error('Registration failed:', error);
+    alert('Registration failed: ' + error.message);
+}
   };
 
   return (
