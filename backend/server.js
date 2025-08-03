@@ -1,33 +1,124 @@
+
+
+
+// --- 1. DEPENDENCIES ---
+const express = require('express');
+const cors = require('cors');
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const auth = require('./middleware/auth'); // Import the auth middleware
+
+// --- 2. SETUP ---
+const app = express();
+const port = 3001; 
+const jwtSecret = 'your_super_secret_key_that_should_be_long_and_random';
+
+// --- 3. MIDDLEWARE ---
+app.use(cors()); 
+app.use(express.json()); // Lets your server read JSON from requests
+
+// --- 4. DATABASE CONFIGURATION ---
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'password_manager_db',
+  password: 'pass@123',
+  port: 5432,
+});
+// --- 5. ROUTES ---
+
+// Health Check Route
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Power is ON!' });
+});
+
+// Register a New User Route
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, masterPassword } = req.body;
+    const userCheck = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    if (userCheck.rows.length > 0) {
+      return res.status(400).json({ error: "User with this email already exists." });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(masterPassword, salt);
+    const newUser = await pool.query(
+      "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email",
+      [email, passwordHash]
+    );
+    res.status(201).json({ message: "User created successfully!", user: newUser.rows[0] });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // Login a User Route
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, masterPassword } = req.body;
-
-    // 1. Check if the user exists
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-
     if (user.rows.length === 0) {
-      // We don't say "user not found" for security reasons
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    // 2. Check if the password is correct
-    // We compare the password the user typed with the hashed password in our database
-    const isValidPassword = await bcrypt.compare(
-      masterPassword, 
-      user.rows[0].password_hash
-    );
-
+    const isValidPassword = await bcrypt.compare(masterPassword, user.rows[0].password_hash);
     if (!isValidPassword) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
+    const payload = { user: { id: user.rows[0].id } };
+    jwt.sign(payload, jwtSecret, { expiresIn: '1h' }, (err, token) => {
+      if (err) throw err;
+      res.json({ token });
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
-    // If both checks pass, login is successful!
-    // Later, we will add a JWT token here.
-    res.status(200).json({ message: "Login successful!" });
+// Add a new item to the vault (Protected Route)
+app.post('/api/vault/add', auth, async (req, res) => {
+  try {
+    const userId = req.user.id; 
+    const { website, username, password } = req.body;
+    const encryptedData = JSON.stringify({ website, username, password });
+
+    const newItem = await pool.query(
+      "INSERT INTO vault_items (user_id, encrypted_data_blob) VALUES ($1, $2) RETURNING id",
+      [userId, encryptedData]
+    );
+
+    res.status(201).json(newItem.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+// --- 6. START SERVER ---
+app.listen(port, () => {
+  console.log(`Backend server is running on http://localhost:${port}`);
+});
+
+// In server.js
+
+app.post('/api/vault/add', auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    // We now only receive one piece of data from the body
+    const { encryptedData } = req.body;
+
+    const newItem = await pool.query(
+      "INSERT INTO vault_items (user_id, encrypted_data_blob) VALUES ($1, $2) RETURNING id",
+      [userId, encryptedData] // Save the encrypted blob directly
+    );
+
+    res.status(201).json(newItem.rows[0]);
 
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(500).json({ error: "Server error" });
   }
 });

@@ -6,7 +6,6 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const response = await fetch('http://localhost:3001/api/auth/register', {
         method: 'POST',
@@ -15,21 +14,13 @@ function Register() {
         },
         body: JSON.stringify({ email, masterPassword }),
       });
-
-      // We get the response body here, regardless of success or failure
       const data = await response.json();
-
-      // NOW we check if the response was successful (e.g. status 200)
       if (!response.ok) {
-        // If not okay, we throw an error with the message from the server
         throw new Error(data.error || 'Something went wrong');
       }
-
-      // If we get here, it means the response was OK!
       alert('Registration successful!');
       setEmail('');
       setMasterPassword('');
-
     } catch (error) {
       console.error('Registration failed:', error);
       alert(`Registration failed: ${error.message}`);

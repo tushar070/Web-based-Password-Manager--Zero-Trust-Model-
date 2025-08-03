@@ -1,18 +1,31 @@
 import React, { useState } from 'react';
 
 function Login() {
-  // State for email and password
   const [email, setEmail] = useState('');
   const [masterPassword, setMasterPassword] = useState('');
 
-  // This function runs when the user clicks the "Login" button
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // We will eventually send this to the backend to verify
-    console.log('Logging in with:', { email, masterPassword });
-
-    alert(`Attempting login for: ${email}`);
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, masterPassword }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong');
+      }
+      localStorage.setItem('token', data.token);
+      alert('Login successful! You now have an access token.');
+      setEmail('');
+      setMasterPassword('');
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert(`Login failed: ${error.message}`);
+    }
   };
 
   return (
