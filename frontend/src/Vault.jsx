@@ -21,7 +21,7 @@ function Vault() {
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
-        const response = await fetch('http://localhost:3001/api/vault/items', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/vault/items', {
           headers: { 'x-auth-token': token },
         });
         if (!response.ok) throw new Error('Failed to fetch vault items');
@@ -92,7 +92,7 @@ function Vault() {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3001/api/vault/items/${itemId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/vault/items/${itemId}`, {
         method: 'DELETE',
         headers: { 'x-auth-token': token },
       });
