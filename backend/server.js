@@ -1,6 +1,3 @@
-
-
-
 // --- 1. DEPENDENCIES ---
 const express = require('express');
 const cors = require('cors');
@@ -11,20 +8,26 @@ const auth = require('./middleware/auth'); // Import the auth middleware
 
 // --- 2. SETUP ---
 const app = express();
-const port = 3001; 
-const jwtSecret = 'your_super_secret_key_that_should_be_long_and_random';
-
+const port = 3001;
+//const jwtSecret = 'your_super_secret_key_that_should_be_long_and_random';
+const jwtSecret = process.env.JWT_SECRET;
 // --- 3. MIDDLEWARE ---
-app.use(cors()); 
-app.use(express.json()); // Lets your server read JSON from requests
+app.use(cors());
+app.use(express.json());
 
 // --- 4. DATABASE CONFIGURATION ---
+// const pool = new Pool({
+//   user: 'gitpod',
+//   host: 'localhost',
+//   database: 'password_manager_db',
+//   password: 'gitpod',
+//   port: 5432,
+// });
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'password_manager_db',
-  password: 'pass@123',
-  port: 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 // --- 5. ROUTES ---
 
@@ -80,16 +83,28 @@ app.post('/api/auth/login', async (req, res) => {
 // Add a new item to the vault (Protected Route)
 app.post('/api/vault/add', auth, async (req, res) => {
   try {
-    const userId = req.user.id; 
-    const { website, username, password } = req.body;
-    const encryptedData = JSON.stringify({ website, username, password });
-
+    const userId = req.user.id;
+    const { encryptedData } = req.body;
     const newItem = await pool.query(
       "INSERT INTO vault_items (user_id, encrypted_data_blob) VALUES ($1, $2) RETURNING id",
       [userId, encryptedData]
     );
-
     res.status(201).json(newItem.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Get all vault items for a user (Protected Route)
+app.get('/api/vault/items', auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const items = await pool.query(
+      "SELECT * FROM vault_items WHERE user_id = $1 ORDER BY created_at DESC",
+      [userId]
+    );
+    res.json(items.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: "Server error" });
@@ -100,25 +115,4 @@ app.post('/api/vault/add', auth, async (req, res) => {
 // --- 6. START SERVER ---
 app.listen(port, () => {
   console.log(`Backend server is running on http://localhost:${port}`);
-});
-
-// In server.js
-
-app.post('/api/vault/add', auth, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    // We now only receive one piece of data from the body
-    const { encryptedData } = req.body;
-
-    const newItem = await pool.query(
-      "INSERT INTO vault_items (user_id, encrypted_data_blob) VALUES ($1, $2) RETURNING id",
-      [userId, encryptedData] // Save the encrypted blob directly
-    );
-
-    res.status(201).json(newItem.rows[0]);
-
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: "Server error" });
-  }
 });

@@ -1,13 +1,135 @@
 body {
+  background-color: #0A192F;
+  color: #CCD6F6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* --- FADE-IN ANIMATION --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the card vertically */
+  padding: 40px 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* --- FROSTED GLASS EFFECT --- */
+.form-card {
+  background-color: rgba(17, 24, 39, 0.6); /* Semi-transparent background */
+  backdrop-filter: blur(20px); /* The blur effect! */
+  -webkit-backdrop-filter: blur(20px);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeIn 1s ease-out; /* Apply the fade-in animation */
+}
+
+.form-container, .vault-container {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  z-index: 1;
+}
+
+h1 { font-size: 2.5em; font-weight: 700; margin-bottom: 40px; color: #CCD6F6; }
+h2 { font-size: 1.8em; font-weight: 600; color: #CCD6F6; }
+h3 { color: #A8B2D1; font-weight: 500; }
+
+form { display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px; }
+form div { text-align: left; }
+form label { display: block; margin-bottom: 8px; font-size: 0.9em; font-weight: 500; color: #A8B2D1; }
+
+input[type="text"], input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #1E2D3D;
+  border: 1px solid #606A7B;
+  border-radius: 8px;
+  color: #CCD6F6;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+input:focus { outline: none; border-color: #00FFFF; }
+
+/* --- BUTTON GLOW EFFECT --- */
+button {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+  border: none;
+  background-color: #00FFFF;
+  color: #0A192F;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+}
+button:hover {
+  background-color: #40E0D0;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+}
+
+hr { width: 100%; border: none; border-top: 1px solid #44403c; margin: 40px 0; }
+
+/* --- VAULT STYLES --- */
+.vault-controls { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+.decrypt-section { display: flex; gap: 10px; }
+.decrypt-section input { flex-grow: 1; }
+
+.items-list { text-align: left; }
+.vault-item { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  background-color: #1E2D3D;
+  border: 1px solid #606A7B; 
+  padding: 15px; 
+  margin-bottom: 10px; 
+  border-radius: 8px; 
+}
+.item-info { flex-grow: 1; }
+
+.item-actions { display: flex; gap: 10px; }
+.item-actions button { 
+  padding: 8px 12px; 
+  font-size: 0.9em; 
+  background-color: #0A192F; 
+  color: #CCD6F6; 
+  border: 1px solid #606A7B;
+  box-shadow: none; 
+}
+.item-actions button:hover { background-color: #606A7B; box-shadow: none; }
+.delete-btn { background-color: #FF4D4D !important; color: #0A192F !important; }
+.delete-btn:hover { background-color: #E63946 !important; }
+
+.logout-btn { 
+  margin-top: 50px; 
+  background-color: transparent !important; 
+  color: #A8B2D1 !important;
+  border: 1px solid #606A7B !important;
+  box-shadow: none !important;
+}
+.logout-btn:hover {
+  background-color: #1E2D3D !important;
+  border-color: #A8B2D1 !important;
+}
+.search-bar { 
+  width: 100%; 
+  padding: 12px; 
+  background-color: #1E2D3D; 
+  border: 1px solid #606A7B; 
+  border-radius: 8px; 
+  color: #CCD6F6; 
+  font-size: 1em; 
+  box-sizing: border-box; 
+  margin-bottom: 20px; 
 }
