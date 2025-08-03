@@ -23,7 +23,9 @@ function Register() {
       setMasterPassword('');
     } catch (error) {
       console.error('Registration failed:', error);
-      alert(`Registration failed: ${error.message}`);
+      // alert(`Registration failed: ${error.message}`);
+      alert('Registration failed: ' + error.message);
+
     }
   };
 
