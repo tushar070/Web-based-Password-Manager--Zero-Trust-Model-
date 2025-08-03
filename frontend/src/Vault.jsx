@@ -51,7 +51,7 @@ function Vault() {
       const itemToEncrypt = { website, username, password };
       const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(itemToEncrypt), masterPassword).toString();
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/vault/add', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}api/vault/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
         body: JSON.stringify({ encryptedData }),
