@@ -7,8 +7,7 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,7 +23,7 @@ function Register() {
       setMasterPassword('');
     } catch (error) {
       console.error('Registration failed:', error);
-      alert('Registration failed: ' + error.message);
+      alert(`Registration failed: ${error.message}`);
     }
   };
 
