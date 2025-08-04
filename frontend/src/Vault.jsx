@@ -1,13 +1,9 @@
-// frontend/src/Vault.jsx
-
 import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 
-// This component can be removed from here if you prefer, or kept
 import AnimatedBackground from './AnimatedBackground.jsx';
 import './Vault.css';
-
 
 const deriveKey = (password, salt) => {
   return CryptoJS.PBKDF2(password, salt, {
@@ -16,7 +12,6 @@ const deriveKey = (password, salt) => {
   });
 };
 
-// **CHANGE 1: Accept `onLogout` as a prop from App.jsx**
 function Vault({ onLogout }) {
   // State for forms
   const [website, setWebsite] = useState('');
@@ -25,7 +20,7 @@ function Vault({ onLogout }) {
   
   // State for vault management
   const [masterPassword, setMasterPassword] = useState('');
-  const [items, setItems] = useState(null); // **CHANGE 2: Initialize state to null**
+  const [items, setItems] = useState(null);
   const [decryptedItems, setDecryptedItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -44,7 +39,7 @@ function Vault({ onLogout }) {
       } catch (error) { 
           console.error('Fetch items error:', error);
           toast.error("Could not load your vault items.");
-          setItems([]); // Set to empty array on error
+          setItems([]);
       }
     };
     fetchItems();
@@ -82,7 +77,9 @@ function Vault({ onLogout }) {
       const newItemsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/vault/items`, { headers: { 'x-auth-token': token } });
       const newItems = await newItemsResponse.json();
       setItems(newItems);
-      setIsUnlocked(true); // If you add an item, the vault is considered unlocked
+      // After adding a new item, we need to re-decrypt to show it.
+      // A simpler approach is to mark the vault as unlocked with the new items.
+      setIsUnlocked(true); 
 
       setWebsite('');
       setUsername('');
@@ -93,8 +90,46 @@ function Vault({ onLogout }) {
     }
   };
 
-  const handleDecrypt = async () => { /* ...no changes needed in this function... */ };
-  const handleCopy = (passwordToCopy) => { /* ...no changes needed in this function... */ };
+  // ### THIS FUNCTION IS NOW CORRECTLY IMPLEMENTED ###
+  const handleDecrypt = async () => {
+    if (!masterPassword) {
+      toast.info('Please enter your master password to decrypt.');
+      return;
+    }
+    try {
+      const token = localStorage.getItem('token');
+      const saltRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/salt`, { headers: { 'x-auth-token': token } });
+      if (!saltRes.ok) throw new Error('Could not fetch security salt.');
+      const { salt } = await saltRes.json();
+      
+      const decryptionKey = deriveKey(masterPassword, salt);
+      
+      if (items.length > 0) {
+        const testBytes = CryptoJS.AES.decrypt(items[0].encrypted_data_blob, decryptionKey.toString());
+        if (!testBytes.toString(CryptoJS.enc.Utf8)) {
+          throw new Error('Wrong password');
+        }
+      }
+
+      const decrypted = items.map(item => {
+        const bytes = CryptoJS.AES.decrypt(item.encrypted_data_blob, decryptionKey.toString());
+        const decryptedDataString = bytes.toString(CryptoJS.enc.Utf8);
+        const decryptedData = JSON.parse(decryptedDataString);
+        return { id: item.id, ...decryptedData };
+      });
+      
+      toast.success("Vault Unlocked!");
+      setDecryptedItems(decrypted);
+      setIsUnlocked(true);
+    } catch (error) { 
+      toast.error('Decryption failed. Please check your master password.'); 
+    }
+  };
+
+  const handleCopy = (passwordToCopy) => {
+    navigator.clipboard.writeText(passwordToCopy);
+    toast.success('Password copied to clipboard!');
+  };
 
   const handleDelete = async (itemId) => {
     if (!window.confirm('Are you sure you want to delete this item forever?')) return;
@@ -114,15 +149,14 @@ function Vault({ onLogout }) {
     }
   };
 
-  // **CHANGE 3: Improved loading state and conditional rendering**
   const renderContent = () => {
     if (items === null) {
-      return <p>Loading your vault...</p>; // Show a loading message
+      return <p style={{ color: 'white' }}>Loading your vault...</p>;
     }
 
     if (items.length === 0) {
       return (
-        <form onSubmit={handleAddItem}>
+        <form onSubmit={handleAddItem} className="vault-form">
           <h3>Add Your First Item</h3>
           <div><label>Website:</label><input type="text" value={website} onChange={e => setWebsite(e.target.value)} required /></div>
           <div><label>Username/Email:</label><input type="text" value={username} onChange={e => setUsername(e.target.value)} required /></div>
@@ -151,19 +185,36 @@ function Vault({ onLogout }) {
     // If we get here, it means items.length > 0 AND isUnlocked is true
     return (
       <>
-        <form onSubmit={handleAddItem}>
+        <form onSubmit={handleAddItem} className="vault-form">
           <h3>Add New Item</h3>
-          {/* ...form fields... */}
+          <div><label>Website:</label><input type="text" value={website} onChange={e => setWebsite(e.target.value)} required /></div>
+          <div><label>Username/Email:</label><input type="text" value={username} onChange={e => setUsername(e.target.value)} required /></div>
+          <div><label>Password:</label><input type="password" value={password} onChange={e => setPassword(e.target.value)} required /></div>
+          <button type="submit">Add to Vault</button>
         </form>
         <hr />
         <div className="vault-controls">
           <h3>Your Saved Items ({filteredItems.length})</h3>
-          {/* ...search bar... */}
+          <input
+            type="text"
+            placeholder="Search by website..."
+            className="search-bar"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
         </div>
         <div className="items-list">
           {filteredItems.map(item => (
             <div key={item.id} className="vault-item">
-              {/* ...item info and buttons... */}
+              <div className="item-info">
+                <strong>Website:</strong> {item.website}<br />
+                <strong>Username:</strong> {item.username}<br />
+                <strong>Password:</strong> {'*'.repeat(item.password ? item.password.length : 0)}
+              </div>
+              <div className="item-actions">
+                <button onClick={() => handleCopy(item.password)}>Copy</button>
+                <button onClick={() => handleDelete(item.id)} className="delete-btn">Delete</button>
+              </div>
             </div>
           ))}
         </div>
@@ -174,9 +225,11 @@ function Vault({ onLogout }) {
   return (
     <div className="vault-container">
       <AnimatedBackground />
-      <h2>Welcome to Your Secure Vault</h2>
-      {renderContent()}
-      <button onClick={onLogout} className="logout-btn">Logout</button>
+      <div className="vault-content">
+        <h2>Welcome to Your Secure Vault</h2>
+        {renderContent()}
+        <button onClick={onLogout} className="logout-btn">Logout</button>
+      </div>
     </div>
   );
 }
