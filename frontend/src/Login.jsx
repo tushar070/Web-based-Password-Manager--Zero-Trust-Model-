@@ -31,7 +31,7 @@ function Login({ onLoginSuccess }) {
 
     } catch (error) {
       console.error('Login failed:', error);
-      // Use toast for error messages instead of alert
+      // Use toast for error messages instead of alert ok
       toast.error(`Login failed: ${error.message}`);
     }
   };
