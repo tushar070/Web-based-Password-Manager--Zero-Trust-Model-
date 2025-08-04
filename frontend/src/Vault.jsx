@@ -6,11 +6,12 @@ import './Vault.css';
 /**
  * Derives a strong encryption key from a password and a salt using PBKDF2.
  * This is much more secure than using the password directly.
- * @param {string} password The user's master password.
+ * @param {string} password The user's master password.df
  * @param {string} salt A unique, random string for the user.
  * @returns {Object} The derived key.
  */
 const deriveKey = (password, salt) => {
+
   return CryptoJS.PBKDF2(password, salt, {
     keySize: 256 / 32, // 256-bit key
     iterations: 1000    // A standard number of iterations
