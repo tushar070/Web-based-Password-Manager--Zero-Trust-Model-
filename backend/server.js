@@ -9,7 +9,7 @@ const auth = require('./middleware/auth'); // Import the auth middleware
 // --- 2. SETUP ---
 const app = express();
 const port = 3001;
-//const jwtSecret = 'your_super_secret_key_that_should_be_long_and_random';
+//const jwtSecret = 'your_super_secret_kefy_that_should_be_long_and_random';
 const jwtSecret = process.env.JWT_SECRET;
 // --- 3. MIDDLEWARE ---
 app.use(cors());
