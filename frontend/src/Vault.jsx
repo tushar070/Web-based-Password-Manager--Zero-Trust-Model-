@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 
-import AnimatedBackground from './AnimatedBackground.jsx';
+// import AnimatedBackground from './AnimatedBackground.jsx';
 import './Vault.css';
 
 const deriveKey = (password, salt) => {
@@ -224,7 +224,7 @@ function Vault({ onLogout }) {
 
   return (
     <div className="vault-container">
-      <AnimatedBackground />
+    
       <div className="vault-content">
         <h2>Welcome to Your Secure Vault</h2>
         {renderContent()}

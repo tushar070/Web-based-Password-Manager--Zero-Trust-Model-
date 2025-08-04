@@ -13,10 +13,8 @@ body {
 }
 
 .App {
-  position: relative; /* Establishes a positioning context */
   width: 100vw;
   height: 100vh;
-  overflow: hidden; /* Prevents scrollbars from the animation */
 }
 
 /* --- FROSTED GLASS EFFECT --- */
@@ -30,7 +28,7 @@ body {
   animation: fadeIn 1s ease-out; /* Apply the fade-in animation */
 }
 
-.form-container, .vault-container {
+.form-container{
   width: 100%;
   max-width: 500px;
   text-align: center;
@@ -134,20 +132,27 @@ hr { width: 100%; border: none; border-top: 1px solid #44403c; margin: 40px 0; }
 /* Add this to your main CSS file (e.g., index.css) */
 
 .vanta-background {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* The base layer */
+  z-index: 0; 
 }
 
 .app-content {
-  position: relative; /* Use relative so it flows normally inside the flexbox */
-  z-index: 1; /* One layer above the background */
+  position: relative;
+  z-index: 1; 
   width: 100%;
-  height: 100%;
+  min-height: 100%; /* Use min-height to allow it to grow */
+  overflow-y: auto; /* Allow vertical scrolling ONLY when needed */
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 2rem 0; /* Add some padding to the top and bottom */
+}
+/* This gives your vault a clean background to replace the animation */
+.vault-container {
+  background-color: #0a192f; /* A dark blue matching your theme */
+  width: 100%;
 }
