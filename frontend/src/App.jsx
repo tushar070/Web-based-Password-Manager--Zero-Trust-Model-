@@ -1,3 +1,5 @@
+// frontend/src/App.jsx
+
 import React, { useState, useEffect, useRef } from 'react';
 import NET from 'vanta/dist/vanta.net.min';
 import * as THREE from 'three';
@@ -12,21 +14,20 @@ import Vault from './Vault.jsx';
 function App() {
   const [vantaEffect, setVantaEffect] = useState(null);
   const vantaRef = useRef(null);
-  
-  // Manage the token in state, initializing from localStorage
+
+  // **CHANGE 1: Manage the token in state, initializing from localStorage**
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  // This function will be passed to the Login component
+  // **CHANGE 2: This function will be passed to the Login component**
   const handleLoginSuccess = (newToken) => {
     localStorage.setItem('token', newToken);
-    setToken(newToken);
+    setToken(newToken); // This state update will cause the app to re-render!
   };
 
-  // This function will be passed to the Vault component
+  // **CHANGE 3: This function will be passed to the Vault component**
   const handleLogout = () => {
     localStorage.removeItem('token');
     setToken(null);
-    // The useEffect below will handle recreating the Vanta effect
   };
 
   useEffect(() => {
@@ -48,16 +49,20 @@ function App() {
         maxDistance: 20.00,
         spacing: 15.00
       }));
+    } else if (token && vantaEffect) {
+      // If user logs in, destroy the Vanta background
+      vantaEffect.destroy();
+      setVantaEffect(null);
     }
 
     // Cleanup effect
     return () => {
       if (vantaEffect) {
         vantaEffect.destroy();
-        setVantaEffect(null); // Reset the state
+        setVantaEffect(null);
       }
     };
-  }, [token]); // This effect now depends on the token state
+  }, [token, vantaEffect]); // The effect now depends on the token state
 
   return (
     <div ref={vantaRef} className="App">
