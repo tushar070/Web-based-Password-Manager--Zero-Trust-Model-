@@ -1,17 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NET from 'vanta/dist/vanta.net.min';
 import * as THREE from 'three';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './index.css';
 import Register from './Register.jsx';
 import Login from './Login.jsx';
 import Vault from './Vault.jsx';
 
 function App() {
-  const [vantaEffect, setVantaEffect] = useState(0);
+  const [vantaEffect, setVantaEffect] = useState(null);
   const vantaRef = useRef(null);
-  const token = localStorage.getItem('token');
+  
+  // Manage the token in state, initializing from localStorage
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
+  // This function will be passed to the Login component
+  const handleLoginSuccess = (newToken) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
+  };
+
+  // This function will be passed to the Vault component
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+    // The useEffect below will handle recreating the Vanta effect
+  };
 
   useEffect(() => {
+    // Only initialize Vanta if there is NO token and it hasn't been created yet
     if (!token && !vantaEffect) {
       setVantaEffect(NET({
         el: vantaRef.current,
@@ -30,29 +49,39 @@ function App() {
         spacing: 15.00
       }));
     }
+
+    // Cleanup effect
     return () => {
-      if (vantaEffect) vantaEffect.destroy();
+      if (vantaEffect) {
+        vantaEffect.destroy();
+        setVantaEffect(null); // Reset the state
+      }
     };
-  }, [token, vantaEffect]);
+  }, [token]); // This effect now depends on the token state
 
   return (
     <div ref={vantaRef} className="App">
-      <div className={token ? "vault-container" : "form-container"}>
-        
+      <div className={token ? "" : "form-container"}>
         {token ? (
-          // If a token exists, show the Vault
-          <Vault />
+          // If a token exists, show the Vault and pass the logout handler
+          <Vault onLogout={handleLogout} />
         ) : (
-          // If no token, show the Register and Login forms in the card
-          <div className="form-card"> 
+          // If no token, show the Register and Login forms
+          <div className="form-card">
             <h1>CipherSafe</h1>
             <Register />
             <hr />
-            <Login />
+            {/* Pass the login handler to the Login component */}
+            <Login onLoginSuccess={handleLoginSuccess} />
           </div>
         )}
-        
       </div>
+      {/* ToastContainer for notifications across the app */}
+      <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          theme="dark"
+        />
     </div>
   );
 }
