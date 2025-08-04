@@ -90,7 +90,7 @@ hr { width: 100%; border: none; border-top: 1px solid #44403c; margin: 40px 0; }
   display: flex; 
   justify-content: space-between; 
   align-items: center; 
-  background-color: #1E2D3D;
+  background-color: rgba(30, 45, 61, 0.7); /* Change this line */
   border: 1px solid #606A7B; 
   padding: 15px; 
   margin-bottom: 10px; 

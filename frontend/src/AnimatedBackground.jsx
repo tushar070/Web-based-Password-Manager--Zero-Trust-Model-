@@ -1,31 +1,40 @@
-// In src/AnimatedBackground.js
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
+import { Points, PointMaterial } from '@react-three/drei';
+import * as random from 'maath/random/dist/maath-random.esm';
 
-function Box(props) {
-  const meshRef = useRef();
-  // This hook will rotate the box on every frame
-  useFrame((state, delta) => (meshRef.current.rotation.x = meshRef.current.rotation.y += delta * 0.5));
+function Starfield(props) {
+  const ref = useRef();
+  // Create an array of 5000 random 3D star positions
+  const [sphere] = useState(() => random.inSphere(new Float32Array(5000), { radius: 1.5 }));
+
+  // This hook rotates the starfield on every frame
+  useFrame((state, delta) => {
+    ref.current.rotation.x -= delta / 10;
+    ref.current.rotation.y -= delta / 15;
+  });
+
   return (
-    <mesh {...props} ref={meshRef}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={'#6d28d9'} roughness={0.5} />
-    </mesh>
+    <group rotation={[0, 0, Math.PI / 4]}>
+      <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
+        <PointMaterial
+          transparent
+          color="#00ffff"
+          size={0.005}
+          sizeAttenuation={true}
+          depthWrite={false}
+        />
+      </Points>
+    </group>
   );
 }
 
-function AnimatedBackground() {
+export default function AnimatedBackground() {
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, opacity: 0.1 }}>
-      <Canvas>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <Box position={[-2, 1, -5]} />
-        <Box position={[2, -1, -5]} />
-        <Box position={[0, 2, -6]} />
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
+      <Canvas camera={{ position: [0, 0, 1] }}>
+        <Starfield />
       </Canvas>
     </div>
   );
 }
-
-export default AnimatedBackground;
