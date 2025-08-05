@@ -6,9 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Import all your components
 import './index.css';
-import LandingPage from './LandingPage.jsx'; // <-- Import the new component
-import Register from './Register.jsx';
-import Login from './Login.jsx';
+import LandingPage from './LandingPage.jsx';
+import RegisterPage from './RegisterPage.jsx';
+import LoginPage from './LoginPage.jsx';
 import Vault from './Vault.jsx';
 
 function App() {
@@ -29,16 +29,15 @@ function App() {
     setCurrentView('landing'); // Go back to the landing page on logout
   };
 
-  // This function is passed to the LandingPage
-  const showAuthForms = () => {
-    setCurrentView('auth');
-  };
+  // This function is passed to the LandingPage and auth pages
+  const showRegister = () => setCurrentView('register');
+  const showLogin = () => setCurrentView('login');
 
   // This effect manages the Vanta.js background
   useEffect(() => {
     let vantaEffect = null;
     
-    // Only show the animation if the user is logged out and on the landing/auth page
+    // Only show the animation if the user is logged out
     if (!token) {
       vantaEffect = NET({
         el: vantaRef.current,
@@ -70,20 +69,15 @@ function App() {
       return <Vault onLogout={handleLogout} />;
     }
 
-    // If logged out, decide between landing and auth forms
+    // If logged out, decide between landing, register, and login forms
     switch (currentView) {
-      case 'auth':
-        return (
-          <div className="form-card">
-            <h1>CipherSafe</h1>
-            <Register />
-            <hr />
-            <Login onLoginSuccess={handleLoginSuccess} />
-          </div>
-        );
+      case 'register':
+        return <RegisterPage onShowLogin={showLogin} />;
+      case 'login':
+        return <LoginPage onLoginSuccess={handleLoginSuccess} onShowRegister={showRegister} />;
       case 'landing':
       default:
-        return <LandingPage onGetStartedClick={showAuthForms} />;
+        return <LandingPage onGetStartedClick={showRegister} />;
     }
   };
 

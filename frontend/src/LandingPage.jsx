@@ -1,16 +1,16 @@
+// FILE: frontend/src/LandingPage.jsx
+
 import React from 'react';
-import './LandingPage.css'; // We will create this CSS file next
+import './LandingPage.css';
 
 // You can replace these with actual icons from a library like 'react-icons' later
 const ShieldIcon = () => <span className="icon">🛡️</span>;
 const KeyIcon = () => <span className="icon">🔑</span>;
 const LockIcon = () => <span className="icon">🔒</span>;
 
-// The main component for your new landing page
 function LandingPage({ onGetStartedClick }) {
   return (
     <div className="landing-page">
-      {/* Navigation Bar */}
       <nav className="navbar">
         <div className="navbar-logo">
           <ShieldIcon />
@@ -23,7 +23,6 @@ function LandingPage({ onGetStartedClick }) {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <header className="hero-section">
         <div className="hero-content">
           <h1>The Future of Digital Security is Here.</h1>
@@ -34,12 +33,10 @@ function LandingPage({ onGetStartedClick }) {
           <button onClick={onGetStartedClick} className="hero-cta">Create Your Secure Vault</button>
         </div>
         <div className="hero-image">
-            {/* You can replace this with a cool graphic */}
             <img src="https://placehold.co/600x400/0a192f/00ffff?text=Your+Secure+Graphic" alt="Security illustration" />
         </div>
       </header>
 
-      {/* Features Section */}
       <section id="features" className="features-section">
         <h2>Why Choose CipherSafe?</h2>
         <div className="features-grid">
@@ -61,7 +58,6 @@ function LandingPage({ onGetStartedClick }) {
         </div>
       </section>
 
-       {/* Footer */}
        <footer className="footer">
             <p>&copy; 2024 CipherSafe. All Rights Reserved. Your security is our mission.</p>
        </footer>
