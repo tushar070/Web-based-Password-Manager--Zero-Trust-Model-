@@ -1,68 +1,43 @@
-// FILE: frontend/src/LandingPage.jsx
 
-import React from 'react';
-import './LandingPage.css';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import './AuthPage.css'; // Shared CSS for login/register
 
-// You can replace these with actual icons from a library like 'react-icons' later
-const ShieldIcon = () => <span className="icon">🛡️</span>;
-const KeyIcon = () => <span className="icon">🔑</span>;
-const LockIcon = () => <span className="icon">🔒</span>;
+function LoginPage({ onLoginSuccess, onShowRegister }) {
+  const [email, setEmail] = useState('');
+  const [masterPassword, setMasterPassword] = useState('');
 
-function LandingPage({ onGetStartedClick }) {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, masterPassword }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Login failed');
+      onLoginSuccess(data.token);
+      toast.success('Login Successful!');
+    } catch (error) {
+      toast.error(`Login failed: ${error.message}`);
+    }
+  };
+
   return (
-    <div className="landing-page">
-      <nav className="navbar">
-        <div className="navbar-logo">
-          <ShieldIcon />
-          <span>CipherSafe</span>
-        </div>
-        <div className="navbar-links">
-          <a href="#features">Features</a>
-          <a href="#security">Security</a>
-          <button onClick={onGetStartedClick} className="navbar-cta">Get Started</button>
-        </div>
-      </nav>
-
-      <header className="hero-section">
-        <div className="hero-content">
-          <h1>The Future of Digital Security is Here.</h1>
-          <p className="hero-subtitle">
-            CipherSafe provides military-grade encryption for your most sensitive data,
-            built on a zero-trust model. Secure, private, and powerful.
-          </p>
-          <button onClick={onGetStartedClick} className="hero-cta">Create Your Secure Vault</button>
-        </div>
-        <div className="hero-image">
-            <img src="https://placehold.co/600x400/0a192f/00ffff?text=Your+Secure+Graphic" alt="Security illustration" />
-        </div>
-      </header>
-
-      <section id="features" className="features-section">
-        <h2>Why Choose CipherSafe?</h2>
-        <div className="features-grid">
-          <div className="feature-card">
-            <LockIcon />
-            <h3>Zero-Trust Architecture</h3>
-            <p>We can't see your data, and we never will. Your master password is the only key, and it never leaves your device.</p>
-          </div>
-          <div className="feature-card">
-            <KeyIcon />
-            <h3>PBKDF2 Encryption</h3>
-            <p>We use industry-leading key derivation functions to protect your master password from even the most sophisticated attacks.</p>
-          </div>
-          <div className="feature-card">
-            <ShieldIcon />
-            <h3>Cross-Platform Access</h3>
-            <p>Your secure vault is available on any device, anywhere in the world, without compromising on security.</p>
-          </div>
-        </div>
-      </section>
-
-       <footer className="footer">
-            <p>&copy; 2024 CipherSafe. All Rights Reserved. Your security is our mission.</p>
-       </footer>
+    <div className="auth-card">
+      <h1>Welcome Back</h1>
+      <p className="auth-subtitle">Login to access your secure vault.</p>
+      <form onSubmit={handleSubmit}>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" required />
+        <input type="password" value={masterPassword} onChange={(e) => setMasterPassword(e.target.value)} placeholder="Master Password" required />
+        <button type="submit" className="auth-button">Login</button>
+      </form>
+      <p className="auth-switch">
+        Don't have an account? <span onClick={onShowRegister}>Register here</span>
+      </p>
     </div>
   );
 }
 
-export default LandingPage;
+export default LoginPage;

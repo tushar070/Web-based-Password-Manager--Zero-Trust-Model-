@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
 
-function Register() {
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import './AuthPage.css'; // Shared CSS for login/register
+
+function RegisterPage({ onShowLogin }) {
   const [email, setEmail] = useState('');
   const [masterPassword, setMasterPassword] = useState('');
 
@@ -9,50 +12,32 @@ function Register() {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, masterPassword }),
       });
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
-      }
-      alert('Registration successful!');
-      setEmail('');
-      setMasterPassword('');
+      if (!response.ok) throw new Error(data.error || 'Registration failed');
+      toast.success('Registration successful! Please log in.');
+      onShowLogin(); // Switch to the login view
     } catch (error) {
-      console.error('Registration failed:', error);
-      alert(`Registration failed: ${error.message}`);
+      toast.error(`Registration failed: ${error.message}`);
     }
   };
 
   return (
-    <div>
-      <h2>Create Your Account</h2>
+    <div className="auth-card">
+      <h1>Create Your CipherSafe Account</h1>
+      <p className="auth-subtitle">Start your journey to digital security.</p>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input 
-            type="email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required 
-          />
-        </div>
-        <div>
-          <label>Master Password:</label>
-          <input 
-            type="password" 
-            value={masterPassword}
-            onChange={(e) => setMasterPassword(e.target.value)}
-            required 
-          />
-        </div>
-        <button type="submit">Register</button>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" required />
+        <input type="password" value={masterPassword} onChange={(e) => setMasterPassword(e.target.value)} placeholder="Master Password" required />
+        <button type="submit" className="auth-button">Create Account</button>
       </form>
+      <p className="auth-switch">
+        Already have an account? <span onClick={onShowLogin}>Login here</span>
+      </p>
     </div>
   );
 }
 
-export default Register;
+export default RegisterPage;
