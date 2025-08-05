@@ -15,7 +15,7 @@ function App() {
   const vantaRef = useRef(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   
-  // This new state controls which view is active
+  // This state controls which view is active
   const [currentView, setCurrentView] = useState('landing'); 
 
   const handleLoginSuccess = (newToken) => {
@@ -29,7 +29,7 @@ function App() {
     setCurrentView('landing'); // Go back to the landing page on logout
   };
 
-  // This function is passed to the LandingPage and auth pages
+  // Functions to switch between views
   const showRegister = () => setCurrentView('register');
   const showLogin = () => setCurrentView('login');
 

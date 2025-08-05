@@ -1,3 +1,4 @@
+// FILE: frontend/src/RegisterPage.jsx
 
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
