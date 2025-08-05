@@ -32,7 +32,7 @@ function LandingPage({ onGetStartedClick }) {
           <button onClick={onGetStartedClick} className="hero-cta">Create Your Secure Vault</button>
         </div>
         <div className="hero-image">
-            <img src="https://placehold.co/600x400/0a192f/00ffff?text=Your+Secure+Graphic" alt="Security illustration" />
+            <img src="cyber-security.png" alt="Security illustration" />
         </div>
       </header>
 

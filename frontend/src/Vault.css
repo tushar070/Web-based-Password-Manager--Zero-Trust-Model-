@@ -1,42 +1,236 @@
-/* In src/Vault.css */
-.vault-interface {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  perspective: 1000px;
+
+.loading-state, .unlock-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    color: #E2E8F0;
+    font-family: 'Inter', sans-serif;
+    background-color: #0F172A;
+}
+.unlock-container h2 { font-size: 2rem; }
+.unlock-container p { color: #94A3B8; margin-top: 0.5rem; }
+.unlock-form { display: flex; gap: 1rem; margin-top: 2rem; }
+.unlock-form input {
+    background-color: #1E293B;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #E2E8F0;
+    font-size: 1rem;
+    width: 300px;
+}
+.unlock-form button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.unlock-form button:hover {
+    background-color: #4338ca;
 }
 
-.unlock-screen, .unlocked-view {
-  z-index: 20; /* Make sure this is in front of the 3D door */
+.dashboard-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: #0F172A;
+  color: #E2E8F0;
+  padding: 0 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #1E293B;
+}
+
+.dashboard-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.dashboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-actions button {
+  background: none;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.dashboard-actions button:hover {
+    color: #E2E8F0;
+}
+
+.logout-button {
+    background-color: #1E293B !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+}
+
+.dashboard-main {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.card {
+  background-color: #1E293B;
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  color: #94A3B8;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  background-color: #334155;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #E2E8F0;
+  font-size: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.form-actions button {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.form-actions button:hover {
+    opacity: 0.9;
+}
+
+.generate-btn {
+  background-color: #4f46e5; /* Indigo */
+  color: white;
+}
+
+.add-btn {
+  background-color: #334155;
+  color: #E2E8F0;
+}
+
+.your-passwords-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.your-passwords-header h2 {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.search-input {
+  background-color: #334155;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: #E2E8F0;
+  width: 40%;
+}
+
+.passwords-list {
+  max-height: 60vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+  padding-right: 0.5rem;
+}
+
+.password-item {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  animation: fadeIn 1s ease-out;
-}
-
-.items-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  width: 100%;
-  max-width: 800px;
-  margin-top: 30px;
-}
-
-.item-card {
-  background-color: rgba(30, 45, 61, 0.7);
-  border: 1px solid #606A7B;
+  background-color: #334155;
+  padding: 1rem 1.5rem;
   border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.item-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+.item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.item-website {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.item-username, .item-password {
+  font-size: 0.875rem;
+  color: #94A3B8;
+  font-family: 'monospace';
+}
+
+.item-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.item-actions button {
+    background-color: #1E293B;
+    border-radius: 6px;
+    padding: 0.5rem;
+}
+
+.empty-vault-message {
+    text-align: center;
+    color: #94A3B8;
+    padding: 2rem;
 }
