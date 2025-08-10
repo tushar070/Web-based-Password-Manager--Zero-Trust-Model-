@@ -1,4 +1,6 @@
-
+/* // This file contains the CSS styles for the Landing Page of the application.
+ // It styles the landing page, including the navbar, hero section, features section, and footer.
+ // The styles are designed to create a modern and visually appealing layout with a dark theme. */
 .landing-page {
   color: #e6f1ff;
   background-color: transparent; /* Make it transparent to see Vanta */

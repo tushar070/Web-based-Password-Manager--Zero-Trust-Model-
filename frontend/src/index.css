@@ -1,4 +1,6 @@
-/* Add this to the top of index.css */
+/* // This file contains the main CSS styles for the frontend application.
+ // It includes styles for the overall layout, form cards, buttons, and other UI elements.
+ // The styles are designed to create a modern and visually appealing user interface with a dark theme. */
 
 html, body {
   overflow-x: hidden; /* This prevents horizontal scrolling on the entire page */

@@ -7,3 +7,5 @@ export default defineConfig({
     target: 'esnext',
   },
 });
+//this handles the Vite configuration for a React application, enabling modern JavaScript features and React support.
+// It uses the `@vitejs/plugin-react` plugin to handle React files and sets the target for ESBuild to 'esnext' for modern JavaScript compatibility. 

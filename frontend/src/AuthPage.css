@@ -1,3 +1,6 @@
+/* // This file contains the CSS styles for the authentication page of the application.
+// It styles the authentication card, including the form inputs, buttons, and overall layout.
+// The styles are designed to create a modern and visually appealing user interface with a dark theme. */
 
 .auth-card {
   background: rgba(17, 24, 39, 0.8);

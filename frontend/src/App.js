@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FOG from 'vanta/dist/vanta.fog.min';
 import * as THREE from 'three';
-import './App.css'; // We will create this file next
+import './App.css'; // We will create this file next accordingly
 import Register from './Register';
 import Login from './Login';
 import Vault from './Vault';
