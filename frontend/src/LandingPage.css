@@ -1,14 +1,13 @@
-/* // This file contains the CSS styles for the Landing Page of the application.
- // It styles the landing page, including the navbar, hero section, features section, and footer.
- // The styles are designed to create a modern and visually appealing layout with a dark theme. */
 .landing-page {
   color: #e6f1ff;
   background-color: transparent; /* Make it transparent to see Vanta */
   font-family: 'Inter', sans-serif;
   width: 100%;
-}
+  overflow: hidden; /* Prevent horizontal scrollbar */
+ }
+ 
 
-.navbar {
+ .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,36 +17,42 @@
   top: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(17, 34, 64, 0.5);
+  background: rgba(17, 34, 64, 0.7); /* Slightly more opaque navbar */
   backdrop-filter: blur(10px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 100;
-}
+  transition: background-color 0.3s ease;
+ }
+ 
 
-.navbar-logo {
+ .navbar-logo {
   display: flex;
   align-items: center;
   font-weight: 700;
   font-size: 1.5rem;
-}
+ }
+ 
 
-.navbar-logo .icon {
+ .navbar-logo .icon {
   margin-right: 0.5rem;
-}
+ }
+ 
 
-.navbar-links a {
+ .navbar-links a {
   color: #ccd6f6;
   text-decoration: none;
   margin: 0 1rem;
   transition: color 0.3s ease;
-}
+ }
+ 
 
-.navbar-links a:hover {
+ .navbar-links a:hover {
   color: #00ffff;
-}
+ }
+ 
 
-.navbar-cta {
+ .navbar-cta {
   background-color: #00ffff;
   color: #0a192f;
   border: none;
@@ -55,39 +60,67 @@
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+ }
+ 
 
-.navbar-cta:hover {
+ .navbar-cta:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
-}
+  background-color: #17ecec;
+ }
+ 
 
-.hero-section {
+ .hero-section {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 10%;
-}
+  position: relative;
+ }
+ 
 
-.hero-content {
+ .hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 25, 47, 0.6); /* Dark overlay for text readability */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10%;
+  z-index: 1; /* Ensure text is above the Vanta background */
+ }
+ 
+
+ .hero-content {
   max-width: 50%;
-}
+  position: relative;
+  z-index: 2; /* Ensure text is above the overlay */
+  animation: fadeUp 1s ease-out forwards 0.5s;
+  opacity: 0;
+ }
+ 
 
-.hero-content h1 {
-  font-size: 4rem;
-  line-height: 1.1;
+ .hero-content h1 {
+  font-size: 3.5rem; /* Slightly smaller for better flow */
+  line-height: 1.2;
   color: #ffffff;
-}
+  margin-bottom: 1rem;
+ }
+ 
 
-.hero-subtitle {
-  font-size: 1.2rem;
+ .hero-subtitle {
+  font-size: 1.1rem;
   color: #8892b0;
   margin: 1.5rem 0;
-}
+ }
+ 
 
-.hero-cta {
+ .hero-cta {
   background-color: #00ffff;
   color: #0a192f;
   border: none;
@@ -96,66 +129,272 @@
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+ }
+ 
 
-.hero-cta:hover {
+ .hero-cta:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 25px rgba(0, 255, 255, 0.3);
-}
+  background-color: #17ecec;
+ }
+ 
 
-.hero-image img {
-  max-width: 100%;
+ .hero-image {
+  max-width: 40%;
   border-radius: 12px;
-}
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
+  animation: fadeIn 1s ease-out forwards 0.7s;
+  opacity: 0;
+ }
+ 
 
-.features-section {
+ .hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+ }
+ 
+
+ .features-section {
   padding: 5rem 10%;
   text-align: center;
-}
+  background: rgba(10, 25, 47, 0.8); /* Dark background for content */
+  position: relative;
+  z-index: 1;
+ }
+ 
 
-.features-section h2 {
+ .features-section h2 {
   font-size: 2.5rem;
   margin-bottom: 3rem;
-}
+  color: #ffffff;
+ }
+ 
 
-.features-grid {
+ .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-}
+  margin-top: 2rem;
+ }
+ 
 
-.feature-card {
+ .feature-card {
   background: #112240;
   padding: 2rem;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.3s ease, border-color 0.3s ease;
-}
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+  animation: slideIn 0.5s ease-out forwards var(--delay);
+  opacity: 0;
+ }
+ 
 
-.feature-card:hover {
-    transform: translateY(-5px);
-    border-color: #00ffff;
-}
+ /* Define different animation delays for each card */
+ .features-grid .feature-card:nth-child(1) { --delay: 0.2s; }
+ .features-grid .feature-card:nth-child(2) { --delay: 0.4s; }
+ .features-grid .feature-card:nth-child(3) { --delay: 0.6s; }
+ .features-grid .feature-card:nth-child(4) { --delay: 0.8s; }
+ .features-grid .feature-card:nth-child(5) { --delay: 1.0s; }
+ .features-grid .feature-card:nth-child(6) { --delay: 1.2s; }
+ 
 
-.feature-card .icon {
-  font-size: 2.5rem;
+ .feature-card:hover {
+  transform: translateY(-5px);
+  border-color: #00ffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+ }
+ 
+
+ .feature-card .icon {
+  font-size: 2rem;
   margin-bottom: 1rem;
-}
+  color: #00ffff;
+  display: block;
+ }
+ 
 
-.feature-card h3 {
-  font-size: 1.5rem;
+ .feature-card h3 {
+  font-size: 1.3rem;
   margin-bottom: 1rem;
-}
+  color: #ffffff;
+ }
+ 
 
-.feature-card p {
+ .feature-card p {
   color: #8892b0;
-}
+  line-height: 1.6;
+ }
+ 
 
-.footer {
-    text-align: center;
-    padding: 2rem 0;
-    margin-top: 4rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: #8892b0;
-}
+ .feature-check-icon {
+  color: #a8b2d1;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+ }
+ 
+
+ .security-section {
+  padding: 5rem 10%;
+  background: #0a192f;
+  color: #ccd6f6;
+  position: relative;
+  z-index: 1;
+ }
+ 
+
+ .security-overlay {
+  padding: 4rem;
+  border-radius: 12px;
+  background: rgba(17, 34, 64, 0.7);
+  backdrop-filter: blur(10px);
+ }
+ 
+
+ .security-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+ }
+ 
+
+ .security-section p {
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  color: #a8b2d1;
+ }
+ 
+
+ .security-section ul {
+  list-style: none;
+  padding-left: 0;
+ }
+ 
+
+ .security-section li {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+ }
+ 
+
+ .security-section li::before {
+  content: "•";
+  color: #00ffff;
+  position: absolute;
+  left: 0;
+ }
+ 
+
+ .security-section strong {
+  color: #00ffff;
+ }
+ 
+
+ .privacy-section {
+  padding: 5rem 10%;
+  background: #112240;
+  color: #ccd6f6;
+  position: relative;
+  z-index: 1;
+ }
+ 
+
+ .privacy-overlay {
+  padding: 4rem;
+  border-radius: 12px;
+  background: rgba(17, 34, 64, 0.7);
+  backdrop-filter: blur(10px);
+ }
+ 
+
+ .privacy-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+ }
+ 
+
+ .privacy-section p {
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  color: #a8b2d1;
+ }
+ 
+
+ .privacy-section ul {
+  list-style: none;
+  padding-left: 0;
+ }
+ 
+
+ .privacy-section li {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+ }
+ 
+
+ .privacy-section li::before {
+  content: "•";
+  color: #00ffff;
+  position: absolute;
+  left: 0;
+ }
+ 
+
+ .privacy-section strong {
+  color: #00ffff;
+ }
+ 
+
+ .footer {
+  text-align: center;
+  padding: 2rem 0;
+  margin-top: 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8892b0;
+  background: #0a192f; /* Dark footer background */
+  position: relative;
+  z-index: 1;
+ }
+ 
+
+ /* --- Animations --- */
+ @keyframes fadeUp {
+  from {
+  opacity: 0;
+  transform: translateY(30px);
+  }
+  to {
+  opacity: 1;
+  transform: translateY(0);
+  }
+ }
+ 
+
+ @keyframes fadeIn {
+  from {
+  opacity: 0;
+  }
+  to {
+  opacity: 1;
+  }
+ }
+ 
+
+ @keyframes slideIn {
+  from {
+  opacity: 0;
+  transform: translateX(-20px);
+  }
+  to {
+  opacity: 1;
+  transform: translateX(0);
+  }
+ }
+ 
