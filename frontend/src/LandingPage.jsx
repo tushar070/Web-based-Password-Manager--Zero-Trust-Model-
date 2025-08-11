@@ -63,7 +63,7 @@ function LandingPage({ onGetStartedClick }) {
           <p>We've packed powerful security features into a simple, intuitive interface.</p>
         </div>
         <div className="features-grid">
-          <div className="feature-card animate-on-scroll" style={{'--bg-image': 'url(https://images.unsplash.com/photo-1550751827-4138d04d475d?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600)'}}>
+          <div className="feature-card animate-on-scroll" style={{'--bg-image': 'url(https://cryptocalc.com.au/_nuxt/img/encryption-logo.706c297.png)'}}>
             <div className="card-content">
               <LockIcon />
               <h3>Unbreakable Encryption</h3>
@@ -127,19 +127,19 @@ function LandingPage({ onGetStartedClick }) {
         <div className="slider">
             <div className="slide-track">
                 {/* Add logos of technologies or partners */}
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=PostgreSQL" alt="PostgreSQL"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=React" alt="React"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=Node.js" alt="Node.js"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=AES-256" alt="AES-256"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=PBKDF2" alt="PBKDF2"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=Vercel" alt="Vercel"/></div>
+                <div className="slide"><img src="https://kinsta.com/wp-content/uploads/2022/04/postgres-logo.png" alt="PostgreSQL"/></div>
+                <div className="slide"><img src="https://pluspng.com/img-png/react-logo-png-react-js-logo-history-design-history-and-evolution-5500x3094.png" alt="React"/></div>
+                <div className="slide"><img src="https://images.seeklogo.com/logo-png/26/1/node-js-logo-png_seeklogo-269242.png" alt="Node.js"/></div>
+                <div className="slide"><img src="https://www.watchregister.com/img/aes256.png" alt="AES-256"/></div>
+                <div className="slide"><img src="https://pythonfix.com/pkg/p/pbkdf2/pbkdf2-banner.webp" alt="PBKDF2"/></div>
+                <div className="slide"><img src="https://thf.bing.com/th/id/OIP.ypz_d6GL7n2nXfQnbw_ARAHaFj?o=7&cb=thfc1rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Vercel"/></div>
                 {/* Duplicate for infinite loop effect */}
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=PostgreSQL" alt="PostgreSQL"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=React" alt="React"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=Node.js" alt="Node.js"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=AES-256" alt="AES-256"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=PBKDF2" alt="PBKDF2"/></div>
-                <div className="slide"><img src="https://placehold.co/200x100/112240/818cf8?text=Vercel" alt="Vercel"/></div>
+                            <div className="slide"><img src="https://kinsta.com/wp-content/uploads/2022/04/postgres-logo.png" alt="PostgreSQL"/></div>
+                <div className="slide"><img src="https://pluspng.com/img-png/react-logo-png-react-js-logo-history-design-history-and-evolution-5500x3094.png" alt="React"/></div>
+                <div className="slide"><img src="https://images.seeklogo.com/logo-png/26/1/node-js-logo-png_seeklogo-269242.png" alt="Node.js"/></div>
+                <div className="slide"><img src="https://www.watchregister.com/img/aes256.png" alt="AES-256"/></div>
+                <div className="slide"><img src="https://pythonfix.com/pkg/p/pbkdf2/pbkdf2-banner.webp" alt="PBKDF2"/></div>
+                <div className="slide"><img src="https://thf.bing.com/th/id/OIP.ypz_d6GL7n2nXfQnbw_ARAHaFj?o=7&cb=thfc1rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Vercel"/></div>
             </div>
         </div>
       </section>
