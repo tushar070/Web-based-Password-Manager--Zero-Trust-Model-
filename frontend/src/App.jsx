@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import WAVES from 'vanta/dist/vanta.waves.min'; // <-- CHANGE: Import WAVES
+import WAVES from 'vanta/dist/vanta.waves.min'; // <-- Ensures WAVES animation is used
 import * as THREE from 'three';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import './index.css';
+import './index.css'; // <-- Crucial for global layout
 import LandingPage from './LandingPage.jsx';
 import RegisterPage from './RegisterPage.jsx';
 import LoginPage from './LoginPage.jsx';
@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     let vantaEffect = null;
     if (!token) {
-      // --- CHANGE: Use WAVES animation ---
+      // --- Uses the WAVES animation ---
       vantaEffect = WAVES({
         el: vantaRef.current,
         THREE: THREE,
