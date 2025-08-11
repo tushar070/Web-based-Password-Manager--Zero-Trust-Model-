@@ -1,6 +1,3 @@
-/* // This file contains the CSS styles for the authentication page of the application.
-// It styles the authentication card, including the form inputs, buttons, and overall layout.
-// The styles are designed to create a modern and visually appealing user interface with a dark theme. */
 
 .auth-card {
   background: rgba(17, 24, 39, 0.8);
@@ -12,6 +9,8 @@
   max-width: 450px;
   text-align: center;
   color: #e5e7eb;
+  position: relative;
+  z-index: 2;
 }
 
 .auth-card h1 {
@@ -46,20 +45,21 @@
 }
 
 .auth-button {
-  background-color: #00ffff;
-  color: #0a192f;
+  background-color: #6366f1; /* Indigo */
+  color: #ffffff;
   border: none;
   padding: 0.9rem;
   border-radius: 8px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
   margin-top: 1rem;
 }
 
 .auth-button:hover {
   transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
 }
 
 .auth-switch {
@@ -68,7 +68,7 @@
 }
 
 .auth-switch span {
-  color: #00ffff;
+  color: #818cf8;
   font-weight: 600;
   cursor: pointer;
 }

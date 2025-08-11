@@ -1,8 +1,6 @@
-// FILE: frontend/src/RegisterPage.jsx
-
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import './AuthPage.css';
+import './AuthPage.css'; // Shared CSS for login/register
 
 function RegisterPage({ onShowLogin }) {
   const [email, setEmail] = useState('');
@@ -19,7 +17,7 @@ function RegisterPage({ onShowLogin }) {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Registration failed');
       toast.success('Registration successful! Please log in.');
-      onShowLogin();
+      onShowLogin(); // Switch to the login view
     } catch (error) {
       toast.error(`Registration failed: ${error.message}`);
     }

@@ -1,10 +1,8 @@
+
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import './AuthPage.css';
-// This file contains the LoginPage component which handles user login functionality.
+import './AuthPage.css'; // Shared CSS for login/register
 
-// The LoginPage component allows users to log in with their email and master password.
-// It communicates with the backend API to authenticate the user and retrieve a token.  
 function LoginPage({ onLoginSuccess, onShowRegister }) {
   const [email, setEmail] = useState('');
   const [masterPassword, setMasterPassword] = useState('');

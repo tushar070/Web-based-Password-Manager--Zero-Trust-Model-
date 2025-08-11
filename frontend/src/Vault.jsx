@@ -1,10 +1,11 @@
+// FILE: frontend/src/Vault.jsx
 
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import CryptoJS from 'crypto-js';
 import './Vault.css';
 
-// --- Helper Functions & SVG Icons ---
+// --- Helper Functions & Components ---
 const deriveKey = (password, salt) => CryptoJS.PBKDF2(password, salt, { keySize: 256 / 32, iterations: 1000 });
 const SunIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>;
 const CopyIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>;
@@ -14,7 +15,7 @@ const EyeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height=
 // --- Main Vault Component ---
 function Vault({ onLogout }) {
   const [masterPassword, setMasterPassword] = useState('');
-  const [items, setItems] = useState(null); // Use null for initial loading state
+  const [items, setItems] = useState(null); // null for loading state
   const [decryptedItems, setDecryptedItems] = useState([]);
   const [visiblePasswords, setVisiblePasswords] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,7 +25,7 @@ function Vault({ onLogout }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // Fetch encrypted items when the component loads
+  // Fetch encrypted items on component load
   useEffect(() => {
     const fetchItems = async () => {
       const token = localStorage.getItem('token');
@@ -35,13 +36,13 @@ function Vault({ onLogout }) {
         if (!response.ok) throw new Error('Failed to fetch vault items');
         const data = await response.json();
         setItems(data);
-        // If the vault is empty, there's nothing to decrypt, so we can show the main view.
+        // If vault is empty, no need to ask for master password
         if (data.length === 0) {
             setDecryptedItems([]);
         }
       } catch (error) {
         toast.error("Could not load your vault items.");
-        setItems([]); // Set to an empty array on error to prevent infinite loading
+        setItems([]); // Set to empty array on error
       }
     };
     fetchItems();
@@ -49,12 +50,12 @@ function Vault({ onLogout }) {
 
   const handleDecrypt = async () => {
     if (!masterPassword) return toast.info('Please enter your master password.');
-    if (!items || items.length === 0) return toast.error("There are no items in your vault to decrypt.");
+    if (!items || items.length === 0) return toast.error("No items to decrypt.");
     
     try {
       const token = localStorage.getItem('token');
       const saltRes = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/salt`, { headers: { 'x-auth-token': token } });
-      if (!saltRes.ok) throw new Error('Could not fetch the security salt from the server.');
+      if (!saltRes.ok) throw new Error('Could not fetch security salt.');
       const { salt } = await saltRes.json();
       
       const decryptionKey = deriveKey(masterPassword, salt);
@@ -62,7 +63,7 @@ function Vault({ onLogout }) {
       const decrypted = items.map(item => {
         const bytes = CryptoJS.AES.decrypt(item.encrypted_data_blob, decryptionKey.toString());
         const decryptedDataString = bytes.toString(CryptoJS.enc.Utf8);
-        if (!decryptedDataString) throw new Error("Decryption failed for an item.");
+        if (!decryptedDataString) throw new Error("Decryption failed");
         return { ...JSON.parse(decryptedDataString), id: item.id };
       });
       
@@ -75,6 +76,7 @@ function Vault({ onLogout }) {
 
   const handleAddItem = async (e) => {
     e.preventDefault();
+    // For the first item, a master password must be set.
     if (items.length === 0 && !masterPassword) {
         return toast.warn("Please create a master password to encrypt your first item.");
     }
@@ -84,9 +86,10 @@ function Vault({ onLogout }) {
         if (!saltRes.ok) throw new Error('Could not fetch security salt.');
         const { salt } = await saltRes.json();
         
-        const keyToUse = items.length > 0 ? deriveKey(masterPassword, salt) : deriveKey(masterPassword, salt);
+        // Use the entered master password for encryption
+        const encryptionKey = deriveKey(masterPassword, salt);
         const itemToEncrypt = { website, username, password };
-        const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(itemToEncrypt), keyToUse.toString()).toString();
+        const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(itemToEncrypt), encryptionKey.toString()).toString();
 
         await fetch(`${import.meta.env.VITE_API_URL}/api/vault/add`, {
             method: 'POST',
@@ -95,12 +98,13 @@ function Vault({ onLogout }) {
         });
 
         toast.success('New item added to vault!');
+        // Refetch items to update the list
         const newItemsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/vault/items`, { headers: { 'x-auth-token': token } });
         const newItems = await newItemsResponse.json();
         setItems(newItems);
-        
+        // Re-decrypt with the current master password
         const decrypted = newItems.map(item => {
-            const bytes = CryptoJS.AES.decrypt(item.encrypted_data_blob, keyToUse.toString());
+            const bytes = CryptoJS.AES.decrypt(item.encrypted_data_blob, encryptionKey.toString());
             return { ...JSON.parse(bytes.toString(CryptoJS.enc.Utf8)), id: item.id };
         });
         setDecryptedItems(decrypted);
@@ -112,7 +116,7 @@ function Vault({ onLogout }) {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to permanently delete this item?")) return;
+    if (!window.confirm("Are you sure you want to delete this item?")) return;
     try {
         const token = localStorage.getItem('token');
         await fetch(`${import.meta.env.VITE_API_URL}/api/vault/items/${id}`, {
@@ -127,14 +131,14 @@ function Vault({ onLogout }) {
     }
   };
   
-  const handleCopy = (text) => { navigator.clipboard.writeText(text); toast.success("Password copied to clipboard!"); };
+  const handleCopy = (text) => { navigator.clipboard.writeText(text); toast.success("Copied to clipboard!"); };
   const togglePasswordVisibility = (id) => setVisiblePasswords(prev => ({...prev, [id]: !prev[id]}));
 
   const filteredAndDecryptedItems = decryptedItems.filter(item => 
     item.website.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // --- RENDER LOGIC ---
+  // Conditional Rendering Logic
   if (items === null) {
       return <div className="loading-state">Loading Secure Vault...</div>;
   }
