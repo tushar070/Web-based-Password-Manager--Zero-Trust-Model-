@@ -1,3 +1,4 @@
+// FILE: frontend/src/LandingPage.jsx
 
 import React, { useEffect } from 'react';
 import './LandingPage.css';
@@ -10,7 +11,6 @@ const GlobeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" heigh
 
 function LandingPage({ onGetStartedClick }) {
     
-  // Effect to handle scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {

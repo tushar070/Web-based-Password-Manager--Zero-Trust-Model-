@@ -28,4 +28,5 @@ body {
 .app-content {
   position: relative; /* Establishes a stacking context */
   z-index: 1; /* Pulls all content (landing, auth, vault) in front of the background */
+  width: 100%;
 }
