@@ -1,32 +1,40 @@
 /* FILE: frontend/src/index.css */
 
-/* --- Global Styles & Resets --- */
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif; /* A modern, clean font */
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0a192f; /* A dark blue fallback background */
-  color: #e6f1ff; /* Light text color for readability */
+  background-color: #0a192f; /* Fallback background */
+  color: #e6f1ff;
+  overflow-x: hidden;
 }
 
 #root {
-  overflow-x: hidden; /* Prevents horizontal scrollbars from animations */
+  width: 100vw;
+  height: 100vh;
 }
 
-/* --- Vanta.js Background Positioning --- */
+.App {
+  width: 100%;
+  height: 100%;
+}
+
 .vanta-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* Pushes the animated background to the very back */
+  z-index: 0;
 }
 
-/* --- Main App Content Container --- */
 .app-content {
-  position: relative; /* Establishes a stacking context */
-  z-index: 1; /* Pulls all content (landing, auth, vault) in front of the background */
+  position: relative;
+  z-index: 1; 
   width: 100%;
+  height: 100%;
+  display: flex; /* This is the key */
+  justify-content: center; /* This is the key */
+  align-items: center; /* This is the key */
 }
